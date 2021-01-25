@@ -8,14 +8,15 @@ import Home from './Screens/Home';
 const Stack = createStackNavigator();
 
 
-const App =()=>{
-  return(
+const App = () => {
+  return (
+    // navigation container for navigation between screens
     <NavigationContainer>
-   <Stack.Navigator>
-    <Stack.Screen name="Home" component={Home}  options={{ headerShown: false }}/>
-    <Stack.Screen name="Favorites" component={Favorites} options={{ headerShown: false }} />
-   </Stack.Navigator>
-    </NavigationContainer> 
+      <Stack.Navigator>
+        <Stack.Screen name="Home" component={Home} options={{ headerShown: false }} />
+        <Stack.Screen name="Favorites" component={Favorites} options={{ headerShown: false }} />
+      </Stack.Navigator>
+    </NavigationContainer>
 
   );
 }
