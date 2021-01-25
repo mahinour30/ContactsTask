@@ -3,8 +3,7 @@ import {View, Text, FlatList, Platform, StyleSheet, PermissionsAndroid, Image, S
 import Contacts from 'react-native-contacts';
 import {COLORS, FONTS, SIZES, icons} from '../constants';
 
-
-const Favorites =()=>{
+const Favorites =({navigation})=>{
 
   const [contacts, setContacts]= useState(null);
 
@@ -33,16 +32,41 @@ const Favorites =()=>{
   }
   }, []);
 
+    const [isLoading, setIsLoading] = useState(false)
 
+  useEffect(()=>{
+      let arr = contacts.map((item, index)=>{
+          item.isSelected=false
+          return{...item};
+      })
+      console.log('arr data ==> ', arr)
+  },[])
+
+    const goToLoad = ()=>{
+        setIsLoading(true);
+    }
+
+  const selectionHandler=(ind)=>{
+   let arr = contacts.map((item, index) =>{
+        if(ind == index){
+            item.isSelected= !item.isSelected
+        }
+        return{...item}
+    }) 
+    console.log('Selection ==>', arr)
+    setContacts(arr);
+  }
 
 
   return(
     <SafeAreaView style={styles.Container}>
-      <View style={{backgroundColor:COLORS.primary}}>
-        <Text>
-          =====================
-        </Text>
-      </View>
+        <TouchableOpacity style={{height:20}}
+            
+            onPress={()=> navigation.navigate('Home')}>
+                
+                    <Text style={{...FONTS.h2, color:COLORS.secondary}}>Back</Text> 
+               
+            </TouchableOpacity>
       <FlatList
       data = {contacts}
       renderItem = {({item}) => (
@@ -64,12 +88,19 @@ const Favorites =()=>{
           <Text style={styles.Title}>
             {item.familyName} 
           </Text>
-          <TouchableOpacity  style={styles.Round}>
+          <TouchableOpacity  
+          onPress={()=>{selectionHandler(index)}}
+          style={styles.Round}>
             <View>
-            <Image
-            style={{width:15, height:15, tintColor:COLORS.black}}
-            source={icons.Done}
-            />
+            {(isSelected)?  
+                                <Image
+                                style={{ width: 15, height: 15, tintColor: COLORS.black }}
+                                source={icons.Done}
+                            />
+                        :
+                            <View style={{ width: 15, height: 15, tintColor: COLORS.black }}>
+                            
+                            </View>}
           </View>
            </TouchableOpacity>
         </View>
@@ -86,7 +117,9 @@ export default Favorites;
 
 const styles=StyleSheet.create({
   Container:{
-    flex:1
+    flex:1,
+    backgroundColor: COLORS.black2
+
   },
   Circle:{
     width:50, 
