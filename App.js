@@ -4,7 +4,9 @@ import { createStackNavigator } from '@react-navigation/stack';
 import Favorites from './Screens/Favorites';
 import Home from './Screens/Home';
 
+
 const Stack = createStackNavigator();
+
 
 const App =()=>{
   return(
@@ -14,7 +16,7 @@ const App =()=>{
     <Stack.Screen name="Favorites" component={Favorites} options={{ headerShown: false }} />
    </Stack.Navigator>
     </NavigationContainer> 
-    
+
   );
 }
 
