@@ -1,22 +1,22 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, FlatList, Platform, StyleSheet, PermissionsAndroid, Image, SafeAreaView, TextInput, TouchableOpacity, Pressable,  } from 'react-native';
+import { View, Text, FlatList, Platform, StyleSheet, PermissionsAndroid, Image, SafeAreaView, TextInput, TouchableOpacity, Pressable, } from 'react-native';
 import Contacts from 'react-native-contacts';
 import { COLORS, FONTS, SIZES, icons } from '../constants';
 import { useDispatch } from 'react-redux';
 import { addContact } from '../redux/actions/actions';
-import {connect} from 'react-redux';
+import { connect } from 'react-redux';
 
-const Home = ({navigation}, props) => {
+const Home = ({ navigation }, props) => {
 
     const [contacts, setContacts] = useState(null);
     const [selected, setSelected] = useState([]);
     const [target, setTarget] = useState('');
-    const [flag , setFlag] = useState(false);
+    const [flag, setFlag] = useState(false);
     const dispatch = useDispatch();
 
     const submitContact = (contact) => dispatch(addContact(contact))
 
-
+    // fetching contacts list from phone
     useEffect(() => {
         if (Platform.OS === 'ios') {
             Contacts.getAll((error, contacts) => {
@@ -43,6 +43,8 @@ const Home = ({navigation}, props) => {
         }
     }, []);
 
+
+    // getting the searched query and matching it with th contacts data
     const getSearch = e => {
         const filteredData = contacts.filter((contact) => {
             let contactLowerCase = (contact.givenName + '' + contact.familyName).toLowerCase();
@@ -55,14 +57,19 @@ const Home = ({navigation}, props) => {
 
     return (
         <SafeAreaView style={styles.Container}>
-            <TouchableOpacity style={{height:20, left:-10, flexDirection:'row-reverse'}}
-            
-            onPress={()=> navigation.navigate('Favorites')}>
-                
-                    {(flag) ? <Text style={{...FONTS.h2, color:COLORS.secondary}}>Next</Text> : <Text style={{...FONTS.h2, color:COLORS.secondary}}>Favorites</Text> }
-               
+
+            {/* ////////////// header section //////////// */}
+            <TouchableOpacity style={{ height: 20, left: -10, flexDirection: 'row-reverse' }}
+
+                onPress={() => navigation.navigate('Favorites')}>
+
+                {(flag) ? <Text style={{ ...FONTS.h2, color: COLORS.secondary }}>Next</Text> : <Text style={{ ...FONTS.h2, color: COLORS.secondary }}>Favorites</Text>}
+
             </TouchableOpacity>
 
+
+
+            {/* /////////////// search section ////////////////// */}
             <View style={{ backgroundColor: COLORS.primary }}>
                 <Image
                     style={styles.Icon}
@@ -75,12 +82,15 @@ const Home = ({navigation}, props) => {
                 />
             </View>
 
+
+
+            {/* ///////////// selected contacts section/////////// */}
             {selected.length != 0 &&
                 <FlatList
                     horizontal={true}
                     data={selected}
                     renderItem={(item) => (
-                        
+
                         <View style={styles.selectContainer}>
                             {console.log('From Selected', item.item.img)}
                             {(item.item.hasThumbnail) ? <Image
@@ -94,14 +104,14 @@ const Home = ({navigation}, props) => {
                                     />
                                 </View>}
 
-                                
+
                             <TouchableOpacity
                                 onPress={() => {
                                     console.log("unselected==>", item.item)
                                     let temp = [...selected]
                                     temp.pop(item.item)
                                     setSelected(temp)
-                                    
+
                                 }}
                                 style={styles.X}>
                                 <View>
@@ -119,96 +129,106 @@ const Home = ({navigation}, props) => {
             }
 
 
+
+
+            {/* ///////// separator /////////// */}
             <View style={{ backgroundColor: COLORS.primary }}>
-                <Text style={{...FONTS.h1, color:COLORS.white, marginLeft:10}}>
+                <Text style={{ ...FONTS.h1, color: COLORS.white, marginLeft: 10 }}>
                     {target}
-        </Text>
+                </Text>
             </View>
 
+
+
+
+            {/* ///////////// all contacts section/////////// */}
             <FlatList
                 data={contacts}
                 renderItem={(item) => {
-                return(
-    
-                    <View style={styles.boxContainer}>
+                    return (
 
-                        {(item.item.hasThumbnail) ? <Image
-                            style={styles.Img}
-                            source={{ uri: item.item.thumbnailPath }}
-                        /> :
-                            <View style={styles.Circle}>
-                                <Image
-                                    style={styles.Avatar}
-                                    source={icons.Avatar}
-                                />
-                            </View>}
+                        <View style={styles.boxContainer}>
 
-                        <Text style={styles.Title}>
-                            {item.item.displayName}
-                        </Text>
-
-                       <Pressable 
-                       onPress={() => {
-                        console.log("selected==>", item.item.displayName)
-                        let temp = [...selected]
-                        console.log("temp before", temp)
-                        let data = {
-                            name :item.item.displayName ,
-                            id :item.item.recordID,
-                            img : item.item.thumbnailPath,
-                            selected:true,
-                            hasThumbnail: item.item.hasThumbnail
-                        }
-                        temp.push(data)
-                        console.log("temp after ", temp)
-                        setSelected(temp)
-                        setFlag(!flag)
-                        submitContact(item.item.displayName, item.item.recordID,item.item.thumbnailPath)
-                    }}
-                    
-                    style={({ pressed }) => [
-                        {
-                          backgroundColor: pressed
-                            ? COLORS.secondary
-                            : COLORS.primary
-                        },
-                        styles.Round
-                      ]} 
-                    >
-                        <Image
-                                        style={{width:15, height:15, tintColor:COLORS.black2}}
-                                        source={icons.Done}
+                            {(item.item.hasThumbnail) ? <Image
+                                style={styles.Img}
+                                source={{ uri: item.item.thumbnailPath }}
+                            /> :
+                                <View style={styles.Circle}>
+                                    <Image
+                                        style={styles.Avatar}
+                                        source={icons.Avatar}
                                     />
-                       </Pressable>
+                                </View>}
+
+                            <Text style={styles.Title}>
+                                {item.item.displayName}
+                            </Text>
+
+                            <Pressable
+                                onPress={() => {
+                                    console.log("selected==>", item.item.displayName)
+                                    let temp = [...selected]
+                                    console.log("temp before", temp)
+                                    let data = {
+                                        name: item.item.displayName,
+                                        id: item.item.recordID,
+                                        img: item.item.thumbnailPath,
+                                        selected: true,
+                                        hasThumbnail: item.item.hasThumbnail
+                                    }
+                                    temp.push(data)
+                                    console.log("temp after ", temp)
+                                    setSelected(temp)
+                                    setFlag(!flag)
+                                    submitContact(item.item.displayName, item.item.recordID, item.item.thumbnailPath)
+                                }}
+
+                                style={({ pressed }) => [
+                                    {
+                                        backgroundColor: pressed
+                                            ? COLORS.secondary
+                                            : COLORS.primary
+                                    },
+                                    styles.Round
+                                ]}
+                            >
+                                <Image
+                                    style={{ width: 15, height: 15, tintColor: COLORS.black2 }}
+                                    source={icons.Done}
+                                />
+                            </Pressable>
 
 
-                        
 
-                    </View>
-                )}}
+
+                        </View>
+                    )
+                }}
                 numColumns={1}
                 keyExtractor={(item, index) => index}
             />
 
-                            { selected.map(value=>{
-                                value
-                            })}
+            { selected.map(value => {
+                value
+            })}
         </SafeAreaView>
 
     )
 }
 
-const mapStateToProps = (state) =>{
-    return{
-      contacts : state.contactReducer.contactList
+
+
+const mapStateToProps = (state) => {
+    return {
+        contacts: state.contactReducer.contactList
     }
-  }
-  
-  const mapDispatchToProps = (dispatch) =>{
-    return{
-      add :(contact) => dispatch(addContact(contact))
+}
+
+const mapDispatchToProps = (dispatch) => {
+    return {
+        add: (contact) => dispatch(addContact(contact))
     }
-  }
+}
 
 export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
