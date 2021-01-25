@@ -92,7 +92,6 @@ const Home = ({ navigation }, props) => {
                     renderItem={(item) => (
 
                         <View style={styles.selectContainer}>
-                            {console.log('From Selected', item.item.img)}
                             {(item.item.hasThumbnail) ? <Image
                                 style={styles.Img}
                                 source={{ uri: item.item.img }}
@@ -107,7 +106,6 @@ const Home = ({ navigation }, props) => {
 
                             <TouchableOpacity
                                 onPress={() => {
-                                    console.log("unselected==>", item.item)
                                     let temp = [...selected]
                                     temp.pop(item.item)
                                     setSelected(temp)
@@ -166,9 +164,7 @@ const Home = ({ navigation }, props) => {
 
                             <Pressable
                                 onPress={() => {
-                                    console.log("selected==>", item.item.displayName)
                                     let temp = [...selected]
-                                    console.log("temp before", temp)
                                     let data = {
                                         name: item.item.displayName,
                                         id: item.item.recordID,
@@ -177,10 +173,9 @@ const Home = ({ navigation }, props) => {
                                         hasThumbnail: item.item.hasThumbnail
                                     }
                                     temp.push(data)
-                                    console.log("temp after ", temp)
                                     setSelected(temp)
                                     setFlag(!flag)
-                                    submitContact(item.item.displayName, item.item.recordID, item.item.thumbnailPath)
+                                    submitContact(item.item.displayName)
                                 }}
 
                                 style={({ pressed }) => [
@@ -217,6 +212,7 @@ const Home = ({ navigation }, props) => {
 }
 
 
+// to manipulate states
 
 const mapStateToProps = (state) => {
     return {
