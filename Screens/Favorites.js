@@ -43,8 +43,8 @@ const Favorites =({navigation}, props)=>{
                style={styles.Round}>
                  <View>
                                      <Image
-                                     style={{ width: 15, height: 15, tintColor: COLORS.black }}
-                                     source={icons.Done}
+                                     style={{ width: 35, height: 35, tintColor: 'red' }}
+                                     source={icons.Trash}
                                  />
                             
                </View>
@@ -98,7 +98,6 @@ const styles=StyleSheet.create({
     tintColor:COLORS.lightGrey,
   },
   Round:{
-    backgroundColor:COLORS.secondary,
     width:25,
     height:25,
     borderRadius:20,
@@ -107,7 +106,6 @@ const styles=StyleSheet.create({
     right:30, 
     position:'absolute', 
     top:17, 
-    borderWidth:1,
   },
   listContainer:{
     borderWidth:1,
