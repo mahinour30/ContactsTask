@@ -2,60 +2,19 @@ import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, Platform, StyleSheet, PermissionsAndroid, Image, SafeAreaView, TextInput, TouchableOpacity} from 'react-native';
 import Contacts from 'react-native-contacts';
 import {COLORS, FONTS, SIZES, icons} from '../constants';
+import { useDispatch, useSelector } from 'react-redux';
+import { deleteContact } from '../redux/actions/actions';
+import {connect} from 'react-redux';
 
-const Favorites =({navigation})=>{
 
-  const [contacts, setContacts]= useState(null);
+const Favorites =({navigation}, props)=>{
 
-  useEffect(() => {
-    if(Platform.OS === 'ios'){
-      Contacts.getAll((error, contacts) => {
-        if(error){
-          throw error;
-        }
-        setContacts(contacts)
-      })
-    } else if(Platform.OS === 'android'){
-    PermissionsAndroid.request(
-      PermissionsAndroid.PERMISSIONS.READ_CONTACTS,
-      {
-        'title': 'Contacts',
-        'message': 'This app would like to view your contacts.'
-      }
-    ).then(() => {
-      Contacts.getAll()
-    .then((contacts) => {
-      setContacts(contacts);
-    })
-    .catch((e) => { console.log(e); })
-    })
-  }
-  }, []);
 
-    const [isLoading, setIsLoading] = useState(false)
+  const dispatch = useDispatch();
 
-  useEffect(()=>{
-      let arr = contacts.map((item, index)=>{
-          item.isSelected=false
-          return{...item};
-      })
-      console.log('arr data ==> ', arr)
-  },[])
+  const deleteCurrent = (key) => dispatch(deleteContact(key))
 
-    const goToLoad = ()=>{
-        setIsLoading(true);
-    }
-
-  const selectionHandler=(ind)=>{
-   let arr = contacts.map((item, index) =>{
-        if(ind == index){
-            item.isSelected= !item.isSelected
-        }
-        return{...item}
-    }) 
-    console.log('Selection ==>', arr)
-    setContacts(arr);
-  }
+  const contacts = useSelector(state => state.contactReducer.contactList)
 
 
   return(
@@ -67,59 +26,72 @@ const Favorites =({navigation})=>{
                     <Text style={{...FONTS.h2, color:COLORS.secondary}}>Back</Text> 
                
             </TouchableOpacity>
-      <FlatList
-      data = {contacts}
-      renderItem = {({item}) => (
-        <View style={styles.boxContainer}>
-          {(item.hasThumbnail) ?<Image
-          style={styles.Img}
-          source={{uri: item.thumbnailPath}}
-          /> :
-          <View style={styles.Circle}>
-            <Image
-            style={styles.Avatar}
-            source={icons.Avatar}
-            />
-          </View> }
-          <Text style={styles.Title}>
-            {item.givenName} 
-          </Text>
-          <Text> </Text>
-          <Text style={styles.Title}>
-            {item.familyName} 
-          </Text>
-          <TouchableOpacity  
-          onPress={()=>{selectionHandler(index)}}
-          style={styles.Round}>
-            <View>
-            {(isSelected)?  
-                                <Image
-                                style={{ width: 15, height: 15, tintColor: COLORS.black }}
-                                source={icons.Done}
-                            />
-                        :
-                            <View style={{ width: 15, height: 15, tintColor: COLORS.black }}>
+
+            {console.log('HIII===>', contacts)}
+
+            <FlatList style={styles.listContainer}
+             data={contacts}
+             keyExtractor={(item, index) => item.key}
+              renderItem={
+               (data) =>
+              
+               
+
+               <View style={{flexDirection:'row'}}>
+
+               <View style={styles.Circle}>
+                 <Image
+                 style={styles.Avatar}
+                 source={icons.Avatar}
+                 />
+               </View> 
+               <Text style={styles.Title}>
+                 {data.item.name}
+               </Text>
+             
+               <TouchableOpacity  
+               onPress={()=>{selectionHandler(index)}}
+               style={styles.Round}>
+                 <View>
+                                     <Image
+                                     style={{ width: 15, height: 15, tintColor: COLORS.black }}
+                                     source={icons.Done}
+                                 />
                             
-                            </View>}
-          </View>
-           </TouchableOpacity>
-        </View>
-      )}
-      numColumns = {1}
-      keyExtractor = {(item, index) => index}
-      />
+               </View>
+     
+                </TouchableOpacity>
+                </View>
+
+
+
+
+      }
+    />
     </SafeAreaView>
 
   )
 }
 
-export default Favorites;
+const mapStateToProps = (state) =>{
+  console.log('home',state);
+  return{
+    contacts : state.contactReducer.contactList
+  }
+}
+
+const mapDispatchToProps = (dispatch) =>{
+  return{
+    delete :(key) => dispatch(deleteContact(key))
+  }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Favorites);
 
 const styles=StyleSheet.create({
   Container:{
     flex:1,
     backgroundColor: COLORS.black2
-
   },
   Circle:{
     width:50, 
