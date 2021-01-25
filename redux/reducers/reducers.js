@@ -1,10 +1,12 @@
 import { ADD_CONTACT, DELETE_CONTACT } from '../actions/types';
 
+// initial value of the state
 const initialState = {
   contactList: []
 }
 
 const contactReducer = (state = initialState, action) => {
+  // for selection
   switch (action.type) {
     case ADD_CONTACT:
       return {
@@ -14,6 +16,8 @@ const contactReducer = (state = initialState, action) => {
           name: action.data
         })
       };
+
+    // for un select 
     case DELETE_CONTACT:
       return {
         ...state,
