@@ -39,7 +39,7 @@ const Favorites =({navigation}, props)=>{
                </Text>
              
                <TouchableOpacity  
-               onPress={()=>{selectionHandler(index)}}
+               onPress={()=>{deleteCurrent(data.item.key)}}
                style={styles.Round}>
                  <View>
                                      <Image
