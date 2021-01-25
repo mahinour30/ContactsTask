@@ -2,14 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, FlatList, Platform, StyleSheet, PermissionsAndroid, Image, SafeAreaView, TextInput, TouchableOpacity, Pressable,  } from 'react-native';
 import Contacts from 'react-native-contacts';
 import { COLORS, FONTS, SIZES, icons } from '../constants';
+import { useDispatch } from 'react-redux';
+import { addContact } from '../redux/actions/actions';
+import {connect} from 'react-redux';
 
-
-const Home = ({navigation}) => {
+const Home = ({navigation}, props) => {
 
     const [contacts, setContacts] = useState(null);
     const [selected, setSelected] = useState([]);
     const [target, setTarget] = useState('');
     const [flag , setFlag] = useState(false);
+    const dispatch = useDispatch();
+
+    const submitContact = (contact) => dispatch(addContact(contact))
+
 
     useEffect(() => {
         if (Platform.OS === 'ios') {
@@ -91,9 +97,8 @@ const Home = ({navigation}) => {
                                     console.log("unselected==>", item.item)
                                     let temp = [...selected]
                                     temp.pop(item.item)
-                                setSelected(temp)
+                                    setSelected(temp)
                                     
-
                                 }}
                                 style={styles.X}>
                                 <View>
@@ -153,8 +158,8 @@ const Home = ({navigation}) => {
                         temp.push(data)
                         console.log("temp after ", temp)
                         setSelected(temp)
-                       setFlag(!flag)
-                        
+                        setFlag(!flag)
+                        submitContact(item.item.displayName, item.item.recordID,item.item.thumbnailPath)
                     }}
                     
                     style={({ pressed }) => [
@@ -190,7 +195,20 @@ const Home = ({navigation}) => {
     )
 }
 
-export default Home;
+const mapStateToProps = (state) =>{
+    console.log('fav',state);
+    return{
+      contacts : state.contactReducer.contactList
+    }
+  }
+  
+  const mapDispatchToProps = (dispatch) =>{
+    return{
+      add :(contact) => dispatch(addContact(contact))
+    }
+  }
+
+export default connect(mapStateToProps, mapDispatchToProps)(Home);
 
 const styles = StyleSheet.create({
     Container: {
