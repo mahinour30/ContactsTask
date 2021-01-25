@@ -1,6 +1,5 @@
 import React, {useState, useEffect} from 'react';
 import {View, Text, FlatList, Platform, StyleSheet, PermissionsAndroid, Image, SafeAreaView, TextInput, TouchableOpacity} from 'react-native';
-import Contacts from 'react-native-contacts';
 import {COLORS, FONTS, SIZES, icons} from '../constants';
 import { useDispatch, useSelector } from 'react-redux';
 import { deleteContact } from '../redux/actions/actions';
@@ -27,24 +26,14 @@ const Favorites =({navigation}, props)=>{
                
             </TouchableOpacity>
 
-            {console.log('HIII===>', contacts)}
 
-            <FlatList style={styles.listContainer}
+            <FlatList
              data={contacts}
              keyExtractor={(item, index) => item.key}
               renderItem={
                (data) =>
-              
+               <View  style={styles.listContainer}>
                
-
-               <View style={{flexDirection:'row'}}>
-
-               <View style={styles.Circle}>
-                 <Image
-                 style={styles.Avatar}
-                 source={icons.Avatar}
-                 />
-               </View> 
                <Text style={styles.Title}>
                  {data.item.name}
                </Text>
@@ -74,7 +63,6 @@ const Favorites =({navigation}, props)=>{
 }
 
 const mapStateToProps = (state) =>{
-  console.log('home',state);
   return{
     contacts : state.contactReducer.contactList
   }
@@ -93,48 +81,11 @@ const styles=StyleSheet.create({
     flex:1,
     backgroundColor: COLORS.black2
   },
-  Circle:{
-    width:50, 
-    height:50, 
-    borderRadius:25, 
-    margin:5, 
-    backgroundColor:'#696969', 
-    justifyContent:'center', 
-    alignItems:'center', 
-    overflow:'hidden',
-  },
-  Img:{
-    width:50, 
-    height:50, 
-    borderRadius:25,
-    margin:5,
-  },
-  Avatar:{
-    width:52, 
-    height:52, 
-    borderRadius:50, 
-    marginTop:17,
-  },
   Title:{
     ...FONTS.h1, 
     color:COLORS.white, 
     marginTop:10,
-  },
-  boxContainer:{
-    backgroundColor:'#282828', 
-    margin:0.3, 
-    flexDirection:'row'
-  },
-  Search:{
-    height: SIZES.height*0.06,
-    width:SIZES.width*0.95, 
-    backgroundColor: COLORS.darkGrey, 
-    borderRadius:15,
-    alignSelf:'center', 
-    margin:10, 
-    color:COLORS.lightGrey,
-    fontSize:20,
-    paddingStart:30,
+    marginLeft:20
   },
   Icon:{
     width:25, 
@@ -158,24 +109,10 @@ const styles=StyleSheet.create({
     top:17, 
     borderWidth:1,
   },
-  selectContainer:{
-    flexDirection:'row', 
-    backgroundColor:COLORS.black2,
-    width:65, 
-    height:80, 
-    justifyContent:'center'
-  },
-  X:{
-    backgroundColor:COLORS.darkGrey,
-    width:20,
-    height:20,
-    borderRadius:20,
-    justifyContent:'center', 
-    alignItems:'center',
-    right:65, 
-    position:'absolute', 
-    top:2, 
+  listContainer:{
     borderWidth:1,
-    borderColor:COLORS.lightGrey
-  },
+    borderColor:COLORS.lightGrey, 
+    flexDirection:'row',
+    padding:10
+  }
 })
