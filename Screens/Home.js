@@ -82,9 +82,10 @@ const Home = ({navigation}, props) => {
                     renderItem={(item) => (
                         
                         <View style={styles.selectContainer}>
+                            {console.log('From Selected', item.item.img)}
                             {(item.item.hasThumbnail) ? <Image
                                 style={styles.Img}
-                                source={{ uri: item.item.thumbnailPath }}
+                                source={{ uri: item.item.img }}
                             /> :
                                 <View style={styles.Circle}>
                                     <Image
@@ -92,6 +93,8 @@ const Home = ({navigation}, props) => {
                                         source={icons.Avatar}
                                     />
                                 </View>}
+
+                                
                             <TouchableOpacity
                                 onPress={() => {
                                     console.log("unselected==>", item.item)
@@ -153,7 +156,8 @@ const Home = ({navigation}, props) => {
                             name :item.item.displayName ,
                             id :item.item.recordID,
                             img : item.item.thumbnailPath,
-                            selected:true
+                            selected:true,
+                            hasThumbnail: item.item.hasThumbnail
                         }
                         temp.push(data)
                         console.log("temp after ", temp)
@@ -188,7 +192,6 @@ const Home = ({navigation}, props) => {
 
                             { selected.map(value=>{
                                 value
-                                console.log('test222', value.name)
                             })}
         </SafeAreaView>
 
@@ -196,7 +199,6 @@ const Home = ({navigation}, props) => {
 }
 
 const mapStateToProps = (state) =>{
-    console.log('fav',state);
     return{
       contacts : state.contactReducer.contactList
     }
